@@ -237,7 +237,7 @@ export default class App extends Vue {
   }
 
   toggleHistory():void {
-    this.showHistory = true;
+    this.showHistory = this.answerLog.length > 0;
   }
 
   setGame():void {
