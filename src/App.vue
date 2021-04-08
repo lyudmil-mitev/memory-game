@@ -204,8 +204,10 @@ export default class App extends Vue {
   }
 
   resetAnswer(revealed:boolean) {
-    this.answerLog = [];
-    this.flipAllCards(revealed);
+    if (this.difficulty) {
+      this.answerLog = [];
+      this.flipAllCards(revealed);
+    }
   }
 
   cardFlip(number:number) {
