@@ -12,7 +12,7 @@
         align="center"
         justify="center"
       >
-        <v-col>
+        <v-col class="text-h3">
           <slot />
         </v-col>
       </v-row>
