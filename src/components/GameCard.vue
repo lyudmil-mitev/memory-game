@@ -1,12 +1,19 @@
 <template>
   <div
-    v-on:click="$emit('flip', number)"
-    v-bind:class="revealed ? 'flip-card flipped': 'flip-card'">
-    <div class='flip-card-inner'>
-      <div class='flip-card-front'></div>
-      <div class='flip-card-back font-weight-black'>
-          <h3 v-if="number">{{ number }}</h3>
-          <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
+    @click="$emit('flip', number)"
+    :class="revealed ? 'flip-card flipped': 'flip-card'"
+  >
+    <div class="flip-card-inner">
+      <div class="flip-card-front" />
+      <div class="flip-card-back font-weight-black">
+        <h3 v-if="number">
+          {{ number }}
+        </h3>
+        <v-progress-circular
+          v-else
+          indeterminate
+          color="primary"
+        />
       </div>
     </div>
   </div> 
@@ -66,9 +73,11 @@
   export default {
     props: {
       number: {
+        default: null,
         type: Number,
       },
       revealed: {
+        default: true,
         type: Boolean
       }
     },

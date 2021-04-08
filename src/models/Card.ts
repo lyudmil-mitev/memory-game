@@ -8,7 +8,7 @@ export interface Answer {
     card: Card,
 }
   
-export function numberListToCardList(numbers:number[]) {
+export function numberListToCardList(numbers:number[]):Card[] {
     return numbers.map((n:number) => Object({value: n, revealed: true}) as Card);
 }
   

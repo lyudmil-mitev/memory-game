@@ -1,32 +1,50 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title>Memory Game</v-toolbar-title>
-      <v-spacer/>
-      <v-btn icon @click="toggleHistory">
+      <v-spacer />
+      <v-btn
+        icon
+        @click="toggleHistory"
+      >
         <v-icon>mdi-history</v-icon>
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" fixed temporary>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      temporary
+    >
       <navigation
-        v-on:new-game="resetGame"
-        v-on:show-solution="resetAnswer(true)"
-        v-on:show-help="showHelp"
-      ></navigation>
+        @new-game="resetGame"
+        @show-solution="resetAnswer(true)"
+        @show-help="showHelp"
+      />
     </v-navigation-drawer>
 
-    <v-navigation-drawer v-model="showHistory" fixed temporary right>
-      <history :history="answerLog"></history>
+    <v-navigation-drawer
+      v-model="showHistory"
+      fixed
+      temporary
+      right
+    >
+      <history :history="answerLog" />
     </v-navigation-drawer>
 
     <v-main>
-      <v-container fluid v-if="!difficulty">
-        <difficulty-chooser v-on:set-difficulty="setGameDifficulty"></difficulty-chooser>
+      <v-container
+        fluid
+        v-if="!difficulty"
+      >
+        <difficulty-chooser @set-difficulty="setGameDifficulty" />
       </v-container>
 
-      <v-dialog v-model="dialog" width="600">
+      <v-dialog
+        v-model="dialog"
+        width="600"
+      >
         <v-card>
           <v-card-title class="headline grey lighten-2">
             How to play the memory game
@@ -44,44 +62,87 @@
             </p>
           </v-card-text>
 
-          <v-divider></v-divider>
+          <v-divider />
 
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false">OK</v-btn>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              text
+              @click="dialog = false"
+            >
+              OK
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="gameWin" width="600">
-        <v-card class="text-center align-center" style="overflow: hidden" dark>
+      <v-dialog
+        v-model="gameWin"
+        width="600"
+      >
+        <v-card
+          class="text-center align-center"
+          style="overflow: hidden"
+          dark
+        >
           <victory-message>
             <h1>You win!</h1>
           </victory-message>
           <v-card-actions class="justify-center">
-            <v-btn x-large color="primary" @click="resetGame">Play again</v-btn>
+            <v-btn
+              x-large
+              color="primary"
+              @click="resetGame"
+            >
+              Play again
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-container class="grey" fluid v-if="difficulty > 0">
+      <v-container
+        class="grey"
+        fluid
+        v-if="difficulty > 0"
+      >
         <v-row>
-          <v-col cols="12" class="text-center">
+          <v-col
+            cols="12"
+            class="text-center"
+          >
             <div :class="[`game game-size-${cards.length}`]">
               <game-card 
                 v-for="card in cards"
                 :key="card.value"
                 :revealed="card.revealed"
-                v-on:flip="cardFlip"
-                :number="card.value">
-              </game-card>
+                @flip="cardFlip"
+                :number="card.value"
+              />
             </div>
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" class="text-center">
-            <v-btn v-if="isGameInProgress && !answerLog.length" @click="resetAnswer(false)" x-large color="primary">Play</v-btn>
-            <v-btn v-if="gameOver && !isAnswerCorrect" @click="resetAnswer(false)" x-large color="primary">Try Again</v-btn>
+          <v-col
+            cols="12"
+            class="text-center"
+          >
+            <v-btn
+              v-if="isGameInProgress && !answerLog.length"
+              @click="resetAnswer(false)"
+              x-large
+              color="primary"
+            >
+              Play
+            </v-btn>
+            <v-btn
+              v-if="gameOver && !isAnswerCorrect"
+              @click="resetAnswer(false)"
+              x-large
+              color="primary"
+            >
+              Try Again
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -148,38 +209,38 @@ export default class App extends Vue {
   maxNumber = 50;
   randomOrgAPI = new RandomOrg({ apiKey: process.env.VUE_APP_RANDOM_ORG_API_KEY });
 
-  get gameOver() {
+  get gameOver():boolean {
     return this.cards.length === this.answerLog.length;
   }
 
-  get gameWin() {
+  get gameWin():boolean {
     return this.gameOver && this.isAnswerCorrect;
   }
 
-  get isAnswerCorrect() {
+  get isAnswerCorrect():boolean {
     // Check if AnswerLog is sorted with Array.prototype.every
     return this.answerLog.length > 0 && 
            this.answerLog.every((answer,i) => !i || this.answerLog[i-1].card.value <= answer.card.value);
   }
 
-  get isGameInProgress() {
+  get isGameInProgress():boolean {
     return typeof this.cards.find(card => card.revealed) !== "undefined";
   }
 
-  setGameDifficulty(value:number) {
+  setGameDifficulty(value:number):void {
     this.difficulty = value;
     this.setGame();
   }
 
-  toggleDrawer() {
+  toggleDrawer():void {
     this.drawer = !this.drawer;
   }
 
-  toggleHistory() {
+  toggleHistory():void {
     this.showHistory = true;
   }
 
-  setGame() {
+  setGame():void {
     const config = {
       min: this.minNumber,
       max: this.maxNumber,
@@ -188,7 +249,7 @@ export default class App extends Vue {
     }
 
     this.cards = [...Array(this.difficulty).keys()].map(
-      card => Object({value: null, revealed: true}) as Card
+      () => Object({value: null, revealed: true}) as Card
     );
     this.randomOrgAPI.generateIntegers(config).then((result:any) => {
       result.random.data.forEach((number:number, i:number) => {
@@ -197,20 +258,20 @@ export default class App extends Vue {
     });
   }
 
-  resetGame() {
+  resetGame():void {
     this.difficulty = 0;
     this.cards = [];
     this.answerLog = [];
   }
 
-  resetAnswer(revealed:boolean) {
+  resetAnswer(revealed:boolean):void {
     if (this.difficulty) {
       this.answerLog = [];
       this.flipAllCards(revealed);
     }
   }
 
-  cardFlip(number:number) {
+  cardFlip(number:number):void {
     const card = this.cards.find(card => card.value === number);
     if (card && !card.revealed) {
       card.revealed = true;
@@ -218,13 +279,13 @@ export default class App extends Vue {
     }
   }
 
-  flipAllCards(revealed: boolean) {
+  flipAllCards(revealed: boolean):void {
     this.cards = this.cards.map(card => {
       return {value: card.value, revealed };
     })
   }
 
-  showHelp() {
+  showHelp():void {
     this.dialog = true;
   }
 }
