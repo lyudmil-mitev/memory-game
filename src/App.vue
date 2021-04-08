@@ -113,8 +113,8 @@
           >
             <div :class="[`game game-size-${cards.length}`]">
               <game-card 
-                v-for="card in cards"
-                :key="card.value"
+                v-for="(card, index) in cards"
+                :key="index"
                 :revealed="card.revealed"
                 @flip="cardFlip"
                 :number="card.value"
@@ -262,12 +262,14 @@ export default class App extends Vue {
     this.difficulty = 0;
     this.cards = [];
     this.answerLog = [];
+    this.$forceUpdate();
   }
 
   resetAnswer(revealed:boolean):void {
     if (this.difficulty) {
       this.answerLog = [];
       this.flipAllCards(revealed);
+      this.$forceUpdate();
     }
   }
 
@@ -287,6 +289,7 @@ export default class App extends Vue {
 
   showHelp():void {
     this.dialog = true;
+    this.$forceUpdate();
   }
 }
 </script>
