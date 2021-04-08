@@ -11,24 +11,23 @@
       </v-row>
       <v-row>
         <v-col
-          v-for="d in [{number: 4, label: 'Easy'},{number: 8, label: 'Medium'},{number: 12, label: 'Hard'}]"
-          :key="d.number"
-          cols="12"
-          sm="4"
-        >
-          <v-item v-slot="{ active, toggle }">
+          v-for="d in [{number: 4, label: 'Easy', color: 'green darken-4'}, {number: 8, label: 'Medium', color: 'yellow darken-4'}, {number: 12, label: 'Hard', color: 'red darken-4'}]"
+          :key="d.number" cols="12" sm="4">
+          <v-item>
             <v-card
-              :color="active ? 'primary' : 'secondary'"
+              :color="d.color"
               class="d-flex align-center"
               dark
               height="200"
-              @click="toggle() || $emit('set-difficulty', d.number)"
+              @click="$emit('set-difficulty', d.number)"
             >
-              <v-card-text class="text-center text--white">
-                <h1 class="mb-2">
+              <v-card-text class="text-center">
+                <h1 class="mb-2 white--text">
                   {{ d.label }}
                 </h1>
-                <h3>Play with {{ d.number }} cards</h3>
+                <h3 class="white--text">
+                    Play with {{ d.number }} cards
+                </h3>
               </v-card-text>
             </v-card>
           </v-item>
