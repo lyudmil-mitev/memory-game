@@ -18,9 +18,9 @@
       temporary
     >
       <navigation
-        @new-game="resetGame"
-        @show-solution="resetAnswer(true)"
-        @show-help="showHelp"
+        @new-game="resetGame(); toggleDrawer()"
+        @show-solution="resetAnswer(true); toggleDrawer()"
+        @show-help="showHelp(); toggleDrawer()"
       />
     </v-navigation-drawer>
 
@@ -102,16 +102,23 @@
       </v-dialog>
 
       <v-container
-        class="grey"
+        grey
+        fill-height
         fluid
+        align-center
         v-if="difficulty > 0"
       >
-        <v-row>
+        <v-row justify="center">
           <v-col
             cols="12"
+            sm="8"
+            md="6"
+            lg="4"
             class="text-center"
           >
-            <div :class="[`game game-size-${cards.length}`]">
+            <div
+              :class="[`game game-size-${cards.length}`]"
+            >
               <game-card 
                 v-for="(card, index) in cards"
                 :key="index"
@@ -122,28 +129,35 @@
             </div>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col
+        <v-row justify="center">
+          <v-bottom-navigation
+            v-if="showPlayBtn || showTryAgainBtn"
+            grow
             cols="12"
-            class="text-center"
+            width="auto"
+            class="rounded"
           >
             <v-btn
-              v-if="isGameInProgress && !answerLog.length"
+              v-if="showPlayBtn"
               @click="resetAnswer(false)"
               x-large
-              color="primary"
             >
               Play
+              <v-icon color="primary">
+                mdi-play
+              </v-icon>
             </v-btn>
             <v-btn
-              v-if="gameOver && !isAnswerCorrect"
+              v-if="showTryAgainBtn"
               @click="resetAnswer(false)"
               x-large
-              color="primary"
             >
               Try Again
+              <v-icon color="primary">
+                mdi-restore
+              </v-icon>
             </v-btn>
-          </v-col>
+          </v-bottom-navigation>
         </v-row>
       </v-container>
     </v-main>
@@ -154,25 +168,20 @@
   .game {
     display: inline-grid;
     grid-gap: 5px;
-    width: 80vw;
+    width: 100%;
+    height: 80vh;
   }
 
   .game-size-12 {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 25vh;
-    line-height: 25vh;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .game-size-8 {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 40vh;
-    line-height: 40vh;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .game-size-4 {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 40vh;
-    line-height: 40vh;
   }
 </style>
 
@@ -225,6 +234,14 @@ export default class App extends Vue {
 
   get isGameInProgress():boolean {
     return typeof this.cards.find(card => card.revealed) !== "undefined";
+  }
+
+  get showPlayBtn():boolean {
+    return this.isGameInProgress && !this.answerLog.length;
+  }
+
+  get showTryAgainBtn():boolean {
+    return this.gameOver && !this.isAnswerCorrect;
   }
 
   setGameDifficulty(value:number):void {

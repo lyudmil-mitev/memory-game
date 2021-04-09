@@ -16,7 +16,9 @@
     >
       <v-list-item link>
         <v-list-item-icon>
-          <v-icon>mdi-play-circle-outline</v-icon>
+          <v-icon color="primary">
+            mdi-play-circle-outline
+          </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -27,7 +29,9 @@
       </v-list-item>
       <v-list-item link>
         <v-list-item-icon>
-          <v-icon>mdi-help-circle-outline</v-icon>
+          <v-icon color="primary">
+            mdi-help-circle-outline
+          </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
@@ -38,7 +42,9 @@
       </v-list-item>
       <v-list-item link>
         <v-list-item-icon>
-          <v-icon>mdi-information-outline</v-icon>
+          <v-icon color="primary">
+            mdi-information-outline
+          </v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
