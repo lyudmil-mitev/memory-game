@@ -4,19 +4,12 @@
       <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title>Memory Game</v-toolbar-title>
       <v-spacer />
-      <v-btn
-        icon
-        @click="toggleHistory"
-      >
+      <v-btn icon @click="toggleHistory">
         <v-icon>{{ historyIcon }}</v-icon>
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      temporary
-    >
+    <v-navigation-drawer v-model="drawer" fixed temporary>
       <navigation
         @new-game="
           resetGame();
@@ -33,69 +26,35 @@
       />
     </v-navigation-drawer>
 
-    <v-navigation-drawer
-      v-model="showHistory"
-      fixed
-      temporary
-      right
-    >
+    <v-navigation-drawer v-model="showHistory" fixed temporary right>
       <history :history="answerLog" />
     </v-navigation-drawer>
 
     <v-main>
-      <v-container
-        fluid
-        v-if="!difficulty"
-      >
+      <v-container fluid v-if="!difficulty">
         <difficulty-chooser @set-difficulty="setGameDifficulty" />
       </v-container>
 
-      <v-dialog
-        v-model="helpDialog"
-        max-width="600"
-      >
+      <v-dialog v-model="helpDialog" max-width="600">
         <help-card @close="helpDialog = false" />
       </v-dialog>
 
-      <v-dialog
-        v-model="gameWin"
-        width="600"
-      >
-        <v-card
-          class="text-center align-center"
-          style="overflow: hidden"
-          dark
-        >
+      <v-dialog v-model="gameWin" width="600">
+        <v-card class="text-center align-center" style="overflow: hidden" dark>
           <victory-message>
             <h1>You win!</h1>
           </victory-message>
           <v-card-actions class="justify-center">
-            <v-btn
-              x-large
-              color="primary"
-              @click="resetGame"
-            >
+            <v-btn x-large color="primary" @click="resetGame">
               Play again
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-container
-        grey
-        fill-height
-        fluid
-        align-center
-        v-if="difficulty > 0"
-      >
+      <v-container grey fill-height fluid align-center v-if="difficulty > 0">
         <v-row justify="center">
-          <v-col
-            cols="12"
-            sm="8"
-            md="6"
-            lg="4"
-            class="text-center"
-          >
+          <v-col cols="12" sm="8" md="6" lg="4" class="text-center">
             <div :class="[`game game-size-${cards.length}`]">
               <game-card
                 v-for="(card, index) in cards"
@@ -249,14 +208,12 @@ export default class App extends Vue {
     this.difficulty = 0;
     this.cards = [];
     this.answerLog = [];
-    this.$forceUpdate();
   }
 
   resetAnswer(revealed: boolean): void {
     if (this.difficulty) {
       this.answerLog = [];
       this.flipAllCards(revealed);
-      this.$forceUpdate();
     }
   }
 
@@ -276,7 +233,6 @@ export default class App extends Vue {
 
   showHelp(): void {
     this.helpDialog = true;
-    this.$forceUpdate();
   }
 }
 </script>

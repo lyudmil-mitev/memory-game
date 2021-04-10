@@ -9,11 +9,7 @@
         <span v-if="number">
           {{ number }}
         </span>
-        <v-progress-circular
-          v-else
-          indeterminate
-          color="primary"
-        />
+        <v-progress-circular v-else indeterminate color="primary" />
       </div>
     </div>
   </div>

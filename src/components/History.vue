@@ -2,21 +2,12 @@
   <v-container>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="title">
-          History
-        </v-list-item-title>
+        <v-list-item-title class="title"> History </v-list-item-title>
         <v-list-item-subtitle>Moves in chronolgical order</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-    <v-list
-      dense
-      nav
-    >
-      <v-list-item
-        link
-        v-for="action in history"
-        :key="action.date.getTime()"
-      >
+    <v-list dense nav>
+      <v-list-item link v-for="action in history" :key="action.date.getTime()">
         <v-list-item-subtitle>
           {{ action.date | dateFormat }}
         </v-list-item-subtitle>
@@ -40,8 +31,8 @@ function dateFormat(date: Date): string {
 @Component({
   name: "History",
   filters: {
-    dateFormat: dateFormat
-  }
+    dateFormat: dateFormat,
+  },
 })
 export default class History extends Vue {
   @Prop({ default: () => [] }) history!: Answer[];

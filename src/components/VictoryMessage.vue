@@ -4,14 +4,8 @@
       <div class="before" />
       <div class="after" />
     </div>
-    <v-container
-      fill-height
-      fluid
-    >
-      <v-row
-        align="center"
-        justify="center"
-      >
+    <v-container fill-height fluid>
+      <v-row align="center" justify="center">
         <v-col class="text-h3">
           <slot />
         </v-col>

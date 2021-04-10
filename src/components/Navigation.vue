@@ -15,7 +15,7 @@
             </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title @click="$emit(item.event)">
+            <v-list-item-title @click.stop="$emit(item.event)">
               {{ item.label }}
             </v-list-item-title>
           </v-list-item-content>
