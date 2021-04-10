@@ -114,6 +114,7 @@ import BottomNavigation from "./components/BottomNavigation.vue";
 import * as RandomOrg from "random-org";
 import { Card, Answer } from "./models/Card";
 import { mdiHistory } from "@mdi/js";
+import { Watch } from "vue-property-decorator";
 
 @Component({
   name: "MemoryGame",
@@ -171,6 +172,16 @@ export default class App extends Vue {
 
   get showTryAgainBtn(): boolean {
     return this.gameOver && !this.isAnswerCorrect;
+  }
+
+  @Watch('difficulty')
+  onDifficultyChange(difficulty:number) {
+    if (difficulty > 0) {
+      // Hide address bar and tab bar on mobile devices
+      window.scrollTo(0, 1);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 
   setGameDifficulty(value: number): void {
