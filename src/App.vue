@@ -81,6 +81,10 @@
 </template>
 
 <style lang="scss">
+html {
+  overflow-y: auto
+}
+
 .game {
   display: inline-grid;
   grid-gap: 5px;
