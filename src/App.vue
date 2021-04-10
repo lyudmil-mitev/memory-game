@@ -175,7 +175,7 @@ export default class App extends Vue {
   }
 
   @Watch('difficulty')
-  onDifficultyChange(difficulty:number) {
+  onDifficultyChange(difficulty:number): void {
     if (difficulty > 0) {
       // Hide address bar and tab bar on mobile devices
       window.scrollTo(0, 1);
