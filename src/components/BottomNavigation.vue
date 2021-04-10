@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation grow cols="12" width="auto" class="rounded">
+  <v-bottom-navigation fixed grow class="rounded">
     <v-btn v-if="showPlayBtn" @click="$emit('play')" x-large>
       Play
       <v-icon color="primary">

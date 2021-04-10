@@ -53,7 +53,7 @@
       </v-dialog>
 
       <v-container grey fill-height fluid align-center v-if="difficulty > 0">
-        <v-row justify="center">
+        <v-row justify="center" class="fill-height">
           <v-col cols="12" sm="8" md="6" lg="4" class="text-center">
             <div :class="[`game game-size-${cards.length}`]">
               <game-card
@@ -85,7 +85,7 @@
   display: inline-grid;
   grid-gap: 5px;
   width: 100%;
-  height: 80vh;
+  height: 100%;
 }
 
 .game-size-12 {
