@@ -25,6 +25,8 @@
   align-self: center;
   perspective: 1000px;
   height: 100%;
+  min-height: 1.25em;
+  min-width: 1.75em;
   box-shadow: 1px 1px 5px #777;
   border-radius: 5px;
   background: #777;

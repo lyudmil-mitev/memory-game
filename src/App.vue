@@ -54,7 +54,7 @@
 
       <v-container grey fill-height fluid align-center v-if="difficulty > 0">
         <v-row justify="center" class="fill-height">
-          <v-col cols="12" sm="8" md="6" lg="4" class="text-center">
+          <v-col cols="12" sm="8" md="6" lg="4" class="text-center px-1 py-0">
             <div :class="[`game game-size-${cards.length}`]">
               <game-card
                 v-for="(card, index) in cards"
@@ -66,15 +66,14 @@
             </div>
           </v-col>
         </v-row>
-        <v-row justify="center">
-          <bottom-navigation
-            v-if="showPlayBtn || showTryAgainBtn"
-            :show-play-btn="showPlayBtn"
-            :show-try-again-btn="showTryAgainBtn"
-            @play="resetAnswer(false)"
-            @try-again="resetAnswer(false)"
-          />
-        </v-row>
+
+        <bottom-navigation
+          v-if="showPlayBtn || showTryAgainBtn"
+          :show-play-btn="showPlayBtn"
+          :show-try-again-btn="showTryAgainBtn"
+          @play="resetAnswer(false)"
+          @try-again="resetAnswer(false)"
+        />
       </v-container>
     </v-main>
   </v-app>
