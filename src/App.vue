@@ -8,7 +8,7 @@
         icon
         @click="toggleHistory"
       >
-        <v-icon>mdi-history</v-icon>
+        <v-icon>{{ historyIcon }}</v-icon>
       </v-btn>
     </v-app-bar>
 
@@ -18,9 +18,18 @@
       temporary
     >
       <navigation
-        @new-game="resetGame(); toggleDrawer()"
-        @show-solution="resetAnswer(true); toggleDrawer()"
-        @show-help="showHelp(); toggleDrawer()"
+        @new-game="
+          resetGame();
+          toggleDrawer();
+        "
+        @show-solution="
+          resetAnswer(true);
+          toggleDrawer();
+        "
+        @show-help="
+          helpDialog = true;
+          toggleDrawer();
+        "
       />
     </v-navigation-drawer>
 
@@ -42,39 +51,10 @@
       </v-container>
 
       <v-dialog
-        v-model="dialog"
-        width="600"
+        v-model="helpDialog"
+        max-width="600"
       >
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            How to play the memory game
-          </v-card-title>
-
-          <v-card-text>
-            <p class="mt-4 mb-2">
-              Challenge your mind with this simple memory game!
-              <ol class="mt-2">
-                <li>When you start the game cards with numbers will be shown to you</li>
-                <li>Memorize the cards as best you can</li>
-                <li>Click "Play" to flip the cards and hide the numbers</li>
-                <li>Flip the cards back in the order of the numbers (from smallest to largest) to win!</li>
-              </ol>
-            </p>
-          </v-card-text>
-
-          <v-divider />
-
-          <v-card-actions>
-            <v-spacer />
-            <v-btn
-              color="primary"
-              text
-              @click="dialog = false"
-            >
-              OK
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <help-card @close="helpDialog = false" />
       </v-dialog>
 
       <v-dialog
@@ -116,10 +96,8 @@
             lg="4"
             class="text-center"
           >
-            <div
-              :class="[`game game-size-${cards.length}`]"
-            >
-              <game-card 
+            <div :class="[`game game-size-${cards.length}`]">
+              <game-card
                 v-for="(card, index) in cards"
                 :key="index"
                 :revealed="card.revealed"
@@ -130,34 +108,13 @@
           </v-col>
         </v-row>
         <v-row justify="center">
-          <v-bottom-navigation
+          <bottom-navigation
             v-if="showPlayBtn || showTryAgainBtn"
-            grow
-            cols="12"
-            width="auto"
-            class="rounded"
-          >
-            <v-btn
-              v-if="showPlayBtn"
-              @click="resetAnswer(false)"
-              x-large
-            >
-              Play
-              <v-icon color="primary">
-                mdi-play
-              </v-icon>
-            </v-btn>
-            <v-btn
-              v-if="showTryAgainBtn"
-              @click="resetAnswer(false)"
-              x-large
-            >
-              Try Again
-              <v-icon color="primary">
-                mdi-restore
-              </v-icon>
-            </v-btn>
-          </v-bottom-navigation>
+            :show-play-btn="showPlayBtn"
+            :show-try-again-btn="showTryAgainBtn"
+            @play="resetAnswer(false)"
+            @try-again="resetAnswer(false)"
+          />
         </v-row>
       </v-container>
     </v-main>
@@ -165,124 +122,137 @@
 </template>
 
 <style lang="scss">
-  .game {
-    display: inline-grid;
-    grid-gap: 5px;
-    width: 100%;
-    height: 80vh;
-  }
+.game {
+  display: inline-grid;
+  grid-gap: 5px;
+  width: 100%;
+  height: 80vh;
+}
 
-  .game-size-12 {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.game-size-12 {
+  grid-template-columns: repeat(3, 1fr);
+}
 
-  .game-size-8 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.game-size-8 {
+  grid-template-columns: repeat(2, 1fr);
+}
 
-  .game-size-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.game-size-4 {
+  grid-template-columns: repeat(2, 1fr);
+}
 </style>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import Component from "vue-class-component";
-import GameCard from './components/GameCard.vue';
-import Navigation from './components/Navigation.vue';
-import DifficultyChooser from './components/DifficultyChooser.vue';
-import VictoryMessage from './components/VictoryMessage.vue';
-import History from './components/History.vue';
-import * as RandomOrg from 'random-org';
-import {Card, Answer} from './models/Card';
+import GameCard from "./components/GameCard.vue";
+import Navigation from "./components/Navigation.vue";
+import DifficultyChooser from "./components/DifficultyChooser.vue";
+import VictoryMessage from "./components/VictoryMessage.vue";
+import History from "./components/History.vue";
+import HelpCard from "./components/HelpCard.vue";
+import BottomNavigation from "./components/BottomNavigation.vue";
+import * as RandomOrg from "random-org";
+import { Card, Answer } from "./models/Card";
+import { mdiHistory } from "@mdi/js";
 
 @Component({
-  name: 'MemoryGame',
+  name: "MemoryGame",
   components: {
     GameCard,
     Navigation,
     DifficultyChooser,
     VictoryMessage,
-    History
+    History,
+    HelpCard,
+    BottomNavigation,
   },
 })
 export default class App extends Vue {
   drawer = false;
-  dialog = false;
+  helpDialog = false;
   loading = false;
   showHistory = false;
+  historyIcon = mdiHistory;
   difficulty = 0;
   cards: Card[] = [];
   answerLog: Answer[] = [];
   minNumber = 1;
   maxNumber = 50;
-  randomOrgAPI = new RandomOrg({ apiKey: process.env.VUE_APP_RANDOM_ORG_API_KEY });
+  randomOrgAPI = new RandomOrg({
+    apiKey: process.env.VUE_APP_RANDOM_ORG_API_KEY,
+  });
 
-  get gameOver():boolean {
+  get gameOver(): boolean {
     return this.cards.length === this.answerLog.length;
   }
 
-  get gameWin():boolean {
+  get gameWin(): boolean {
     return this.gameOver && this.isAnswerCorrect;
   }
 
-  get isAnswerCorrect():boolean {
+  get isAnswerCorrect(): boolean {
     // Check if AnswerLog is sorted with Array.prototype.every
-    return this.answerLog.length > 0 && 
-           this.answerLog.every((answer,i) => !i || this.answerLog[i-1].card.value <= answer.card.value);
+    return (
+      this.answerLog.length > 0 &&
+      this.answerLog.every(
+        (answer, i) =>
+          !i || this.answerLog[i - 1].card.value <= answer.card.value
+      )
+    );
   }
 
-  get isGameInProgress():boolean {
-    return typeof this.cards.find(card => card.revealed) !== "undefined";
+  get isGameInProgress(): boolean {
+    return typeof this.cards.find((card) => card.revealed) !== "undefined";
   }
 
-  get showPlayBtn():boolean {
+  get showPlayBtn(): boolean {
     return this.isGameInProgress && !this.answerLog.length;
   }
 
-  get showTryAgainBtn():boolean {
+  get showTryAgainBtn(): boolean {
     return this.gameOver && !this.isAnswerCorrect;
   }
 
-  setGameDifficulty(value:number):void {
+  setGameDifficulty(value: number): void {
     this.difficulty = value;
     this.setGame();
   }
 
-  toggleDrawer():void {
+  toggleDrawer(): void {
     this.drawer = !this.drawer;
   }
 
-  toggleHistory():void {
+  toggleHistory(): void {
     this.showHistory = this.answerLog.length > 0;
   }
 
-  setGame():void {
+  setGame(): void {
     const config = {
       min: this.minNumber,
       max: this.maxNumber,
-      n: this.difficulty, 
-      replacement: false
-    }
+      n: this.difficulty,
+      replacement: false,
+    };
 
     this.cards = [...Array(this.difficulty).keys()].map(
-      () => Object({value: null, revealed: true}) as Card
+      () => Object({ value: null, revealed: true }) as Card
     );
-    this.randomOrgAPI.generateIntegers(config).then((result:any) => {
-      result.random.data.forEach((number:number, i:number) => {
+    this.randomOrgAPI.generateIntegers(config).then((result: any) => {
+      result.random.data.forEach((number: number, i: number) => {
         this.cards[i].value = number;
-      })
+      });
     });
   }
 
-  resetGame():void {
+  resetGame(): void {
     this.difficulty = 0;
     this.cards = [];
     this.answerLog = [];
     this.$forceUpdate();
   }
 
-  resetAnswer(revealed:boolean):void {
+  resetAnswer(revealed: boolean): void {
     if (this.difficulty) {
       this.answerLog = [];
       this.flipAllCards(revealed);
@@ -290,22 +260,22 @@ export default class App extends Vue {
     }
   }
 
-  cardFlip(number:number):void {
-    const card = this.cards.find(card => card.value === number);
+  cardFlip(number: number): void {
+    const card = this.cards.find((card) => card.value === number);
     if (card && !card.revealed) {
       card.revealed = true;
-      this.answerLog.push({date: new Date(Date.now()), card: card});
+      this.answerLog.push({ date: new Date(Date.now()), card: card });
     }
   }
 
-  flipAllCards(revealed: boolean):void {
-    this.cards = this.cards.map(card => {
-      return {value: card.value, revealed };
-    })
+  flipAllCards(revealed: boolean): void {
+    this.cards = this.cards.map((card) => {
+      return { value: card.value, revealed };
+    });
   }
 
-  showHelp():void {
-    this.dialog = true;
+  showHelp(): void {
+    this.helpDialog = true;
     this.$forceUpdate();
   }
 }

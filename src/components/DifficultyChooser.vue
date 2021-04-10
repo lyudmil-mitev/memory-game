@@ -19,11 +19,11 @@
             cols="12"
             min-width="200"
             max-width="600"
-            v-for="d in [{number: 4, label: 'Easy', color: 'green darken-4'}, {number: 8, label: 'Medium', color: 'yellow darken-4'}, {number: 12, label: 'Hard', color: 'red darken-4'}]"
+            v-for="d in buttons"
             :key="d.number"
           >
             <v-item>
-              <v-card 
+              <v-card
                 :color="d.color"
                 class="align-center pa-2"
                 dark
@@ -46,3 +46,17 @@
     </v-container>
   </v-item-group>
 </template>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+@Component({
+  name: "DifficultyChooser",
+})
+export default class DifficultyChooser extends Vue {
+  buttons = [
+    { number: 4, label: "Easy", color: "green darken-4" },
+    { number: 8, label: "Medium", color: "yellow darken-4" },
+    { number: 12, label: "Hard", color: "red darken-4" },
+  ];
+}
+</script>

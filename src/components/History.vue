@@ -20,32 +20,30 @@
         <v-list-item-subtitle>
           {{ action.date | dateFormat }}
         </v-list-item-subtitle>
-        <v-list-item-title>
-          Card {{ action.card.value }}
-        </v-list-item-title>
+        <v-list-item-title> Card {{ action.card.value }} </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-container>
 </template>
 
 <script lang="ts">
-  import {Answer} from '../models/Card';
-  export default {
-    props: {
-      history: {
-        default: function(): Answer[] {
-          return [];
-        },
-        type: Array,
-      }
-    },
-    filters: {
-      dateFormat: function(date:Date):string {
-          const hours = String(date.getHours()).padStart(2, '0');
-          const mins = String(date.getMinutes()).padStart(2, '0');
-          const secs = String(date.getSeconds()).padStart(2, '0');
-          return `${hours}:${mins}:${secs}`
-      }
-    }
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { Answer } from "../models/Card";
+
+function dateFormat(date: Date): string {
+  const hours = String(date.getHours()).padStart(2, "0");
+  const mins = String(date.getMinutes()).padStart(2, "0");
+  const secs = String(date.getSeconds()).padStart(2, "0");
+  return `${hours}:${mins}:${secs}`;
+}
+
+@Component({
+  name: "History",
+  filters: {
+    dateFormat: dateFormat
   }
+})
+export default class History extends Vue {
+  @Prop({ default: () => [] }) history!: Answer[];
+}
 </script>

@@ -20,8 +20,8 @@
   </div>
 </template>
 <style lang="scss">
-  @import '../scss/pyro.scss';
-  .pyro-wrap {
-      height: 40vh;
-  }
+@import "../scss/pyro.scss";
+.pyro-wrap {
+  height: 40vh;
+}
 </style>
