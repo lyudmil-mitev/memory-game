@@ -6,6 +6,8 @@
 - Click "Play" to flip the cards and hide the numbers
 - Flip the cards back in the order of the numbers (from smallest to largest) to win!
 
+## [Play Now](https://liudmil-mitev.github.io/memory-game/)
+
 ## Libraries used
 - Vue.js view framework
 - Vuetify material design framework
