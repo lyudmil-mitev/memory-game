@@ -86,6 +86,7 @@ html {
 
 .game {
   display: inline-grid;
+  overflow: hidden;
   grid-gap: 5px;
   width: 100%;
   height: 100%;
@@ -147,7 +148,8 @@ export default class App extends Vue {
   });
 
   get gameOver(): boolean {
-    return this.cards.length === this.answerLog.length;
+    return (this.answerLog.length && !this.isAnswerCorrect) ||
+            this.cards.length === this.answerLog.length;
   }
 
   get gameWin(): boolean {
